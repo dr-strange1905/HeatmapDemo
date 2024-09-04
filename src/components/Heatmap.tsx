@@ -28,6 +28,8 @@ const Heatmap = ({ datasets, color = '#00008B', yAxisTitle = 'This is a Title' }
     const width = xLabels.length * cellWidth + 40;
     const height = yLabels.length * cellHeight + 40;
     const margin = { top: 100, right: 100, bottom: 100, left: 200 };
+
+    d3.select('body').selectAll('div.tooltip').remove();
     
 
     if (svgRef.current) {
@@ -60,6 +62,7 @@ const Heatmap = ({ datasets, color = '#00008B', yAxisTitle = 'This is a Title' }
         .range(["#ADD8E6", "#0000FF", "#00008B"]);
     
         const tooltip = d3.select('body').append('div')
+        .attr('class', 'tooltip')
         .style('position', 'absolute')
         .style('background-color', 'rgba(0, 0, 0, 0.7)') 
         .style('color', 'white') 
@@ -96,6 +99,8 @@ const Heatmap = ({ datasets, color = '#00008B', yAxisTitle = 'This is a Title' }
         .on('mouseout', () => {
           tooltip.transition().duration(500).style('opacity', 0);
         });
+
+        
 
         const isColorLight = (color: string) => {
           const rgb = d3.rgb(color);
