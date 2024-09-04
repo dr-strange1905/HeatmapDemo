@@ -8,24 +8,23 @@ interface HeatmapData {
   value: number;
 }
 
-
+interface Datasets {
+  [key: string]: {
+    data: HeatmapData[];
+    xLabels: string[];
+    yLabels: string[];
+  };
+}
 
 const HeatmapContainer = () => {
-  const [data, setData] = useState<HeatmapData[]>([]);
-  const [xLabels, setXLabels] = useState<string[]>([]);
-  const [yLabels, setYLabels] = useState<string[]>([]);
+  const [datasets, setDatasets] = useState<Datasets>({});
 
   useEffect(() => {
-    
     const fetchData = async () => {
       try {
-        const response = await fetch('/data.json' );
+        const response = await fetch('/data.json');
         const jsonData = await response.json();
-
-        
-        setData(jsonData.data);
-        setXLabels(jsonData.xLabels);
-        setYLabels(jsonData.yLabels);
+        setDatasets(jsonData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -34,8 +33,16 @@ const HeatmapContainer = () => {
     fetchData();
   }, []);
 
+  
+
   return (
-    <Heatmap data={data} xLabels={xLabels} yLabels={yLabels} />
+    <div>
+      {Object.keys(datasets).length > 0 ? (
+        <Heatmap datasets={datasets} />
+      ) : (
+        <p>Loading data...</p>
+      )}
+    </div>
   );
 };
 
